@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
-    <Folder Include="Data\" />
     <Folder Include="Configurations\" />
   </ItemGroup>
 

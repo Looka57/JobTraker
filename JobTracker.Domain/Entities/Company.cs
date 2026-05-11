@@ -4,7 +4,11 @@ using System.Text;
 
 namespace JobTracker.Domain.Entities
 {
-    internal class Company
+    public class Company : BaseEntity
     {
+        public string Name { get; set; } = string.Empty;
+        public string? Site { get; set; }
+        public string? Lieu { get; set; }
+
     }
 }
