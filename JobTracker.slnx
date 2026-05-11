@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="JobTracker/JobTracker.csproj" />
+  <Project Path="JobTracker.Application/JobTracker.Application.csproj" />
+  <Project Path="JobTracker.Domain/JobTracker.Domain.csproj" />
+  <Project Path="JobTracker.Infrastructure/JobTracker.Infrastructure.csproj" />
+  <Project Path="JobTracker/JobTracker.API.csproj" />
 </Solution>
