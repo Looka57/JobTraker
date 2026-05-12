@@ -24,6 +24,9 @@ namespace JobTracker.Application.DTOs
 
         public string? UrlOffre { get; set; }
 
-        public string CompanyName { get; set; } = string.Empty;
+
+        // Pour l'affichage dans le Front POUR LA COMPAGNY
+        public int CompanyId { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

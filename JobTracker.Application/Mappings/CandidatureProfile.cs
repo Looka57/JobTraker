@@ -13,12 +13,11 @@ namespace JobTracker.Application.Mappings
     {
         public CandidatureProfile()
         {
-            CreateMap<Candidature, CandidatureDto>()
-                .ForMember(dest => dest.name,
-                    opt => opt.MapFrom(src => src.Company!.Name));
-
-            CreateMap<CreateCandidatureDto, Candidature>();
-
-            CreateMap<UpdateCandidatureDto, Candidature>();
+            CreateMap<Candidature, CandidatureReadDto>()
+                        .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Company.Name));
+            CreateMap<CandidatureCreateDto, Candidature>();
+            CreateMap<CandidatureUpdateDto, Candidature>();
         }
     }
+
+}

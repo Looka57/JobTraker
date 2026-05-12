@@ -20,7 +20,7 @@ namespace JobTracker.Domain.Entities
         //public int UserId { get; set; }
 
         // Propriétés de navigation
-        //public virtual Company Company { get; set; } = null!;
+        public virtual Company Company { get; set; } = null!;
         //public virtual User User { get; set; } = null!;
         //public virtual ICollection<Interaction> Interactions { get; set; } = new List<Interaction>();
 

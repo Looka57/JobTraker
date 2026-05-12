@@ -2,6 +2,7 @@ using JobTracker.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using JobTracker.Domain.Interfaces;
 using JobTracker.Infrastructure.Repositories;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); // installation Swashbuckle.AspNetCore
+builder.Services.AddAutoMapper(assemblies: AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
