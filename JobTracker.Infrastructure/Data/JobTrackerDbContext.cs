@@ -3,9 +3,9 @@ using JobTracker.Domain.Entities;
 
 namespace JobTracker.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class JobTrackDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public JobTrackDbContext(DbContextOptions<JobTrackDbContext> options) : base(options) { }
 
     public DbSet<Candidature> Candidatures { get; set; }
     public DbSet<Company> Compagny { get; set; }

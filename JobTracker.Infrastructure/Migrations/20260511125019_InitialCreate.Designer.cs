@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobTracker.Infrastructure.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(JobTrackDbContext))]
     [Migration("20260511125019_InitialCreate")]
     partial class InitialCreate
     {

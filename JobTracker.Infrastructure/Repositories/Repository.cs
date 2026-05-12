@@ -7,10 +7,10 @@ namespace JobTracker.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : BaseEntity
 {
-    protected readonly ApplicationDbContext _context;
+    protected readonly JobTrackDbContext _context;
     protected readonly DbSet<T> _dbSet;
 
-    public Repository(ApplicationDbContext context)
+    public Repository(JobTrackDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();

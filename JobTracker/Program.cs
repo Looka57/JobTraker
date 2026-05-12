@@ -6,15 +6,14 @@ using JobTracker.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. La base de données
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// 2. Le Repository (Gardons-le, il est super utile !)
+builder.Services.AddDbContext<JobTrackDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
+// 2. Le Repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); // Assure-toi d'avoir installé Swashbuckle.AspNetCore
+builder.Services.AddSwaggerGen(); // installation Swashbuckle.AspNetCore
 
 var app = builder.Build();
 
