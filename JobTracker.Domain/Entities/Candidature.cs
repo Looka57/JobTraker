@@ -7,8 +7,8 @@ namespace JobTracker.Domain.Entities
 {
     public class Candidature: BaseEntity
     {
-        public string Poste { get; set; } = string.Empty;
-        public string TypeContrat { get; set; } = string.Empty;
+        public string? Poste { get; set; } 
+        public string? TypeContrat { get; set; }
         public decimal? Salaire { get; set; }
         public JobStatus Status { get; set; } = JobStatus.Envoyée;
         public DateTime DateCandidature { get; set; } = DateTime.UtcNow;

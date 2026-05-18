@@ -17,6 +17,9 @@ namespace JobTracker.Application.Mappings
                         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Company.Name));
             CreateMap<CandidatureCreateDto, Candidature>();
             CreateMap<CandidatureUpdateDto, Candidature>();
+
+            CreateMap<CandidatureCreateDto, Candidature>()
+                        .ForMember(dest => dest.CompanyId, opt => opt.Ignore());
         }
     }
 

@@ -19,6 +19,6 @@ namespace JobTracker.Application.DTOs
 
         public string? UrlOffre { get; set; }
 
-        public int CompanyId { get; set; }
+        public string? CompagnyName { get; set; }
     }
 }
