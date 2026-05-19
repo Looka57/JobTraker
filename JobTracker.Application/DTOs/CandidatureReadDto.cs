@@ -20,7 +20,7 @@ namespace JobTracker.Application.DTOs
 
         public DateTime DateCandidature { get; set; }
 
-        public int NiveauMotivation { get; set; }
+        public int NiveauMotivation { get; set; }   
 
         public string? UrlOffre { get; set; }
 
