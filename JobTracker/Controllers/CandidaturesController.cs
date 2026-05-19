@@ -53,8 +53,6 @@ public class CandidaturesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
-
-    // 4. Modifier une candidature
     // 4. Modifier une candidature
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, CandidatureUpdateDto updateDto)

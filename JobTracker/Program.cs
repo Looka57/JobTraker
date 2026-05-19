@@ -17,9 +17,13 @@ builder.Services.AddDbContext<JobTrackDbContext>(options => options.UseSqlServer
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     //**b. Le specifique
 builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
 // 3. Les services
+// 3. Les services
 builder.Services.AddScoped<ICandidatureService, CandidatureService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+
 
 //4. AutoMapper
 builder.Services.AddAutoMapper(typeof(CandidatureProfile));
