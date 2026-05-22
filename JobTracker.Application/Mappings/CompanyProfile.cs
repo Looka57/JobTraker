@@ -13,7 +13,7 @@ namespace JobTracker.Application.Mappings
         {
             CreateMap<Company, CompanyReadDto>();
             CreateMap<CompanyCreateDto, Company>();
-            CreateMap<Company, CompanyUpdateDto>();
+            CreateMap<CompanyUpdateDto, Company>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobTracker.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace JobTracker.Domain.Entities
 {
     public class Interaction : BaseEntity
     {
-        public string Type { get; set; } = string.Empty;
+        public  TypeInteraction Type { get; set; } 
         public string Notes { get; set; } = string.Empty;
 
 

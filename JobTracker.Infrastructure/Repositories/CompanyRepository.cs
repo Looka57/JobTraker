@@ -9,7 +9,6 @@ namespace JobTracker.Infrastructure.Repositories
 {
     public class CompanyRepository : Repository<Company>, ICompanyRepository
     {
-        // Correction ici : Le constructeur s'appelle bien CompanyRepository !
         public CompanyRepository(JobTrackDbContext context) : base(context)
         {
         }
@@ -17,13 +16,13 @@ namespace JobTracker.Infrastructure.Repositories
         // Implémentation de la méthode pour récupérer toutes les entreprises
         public async Task<IEnumerable<Company>> GetCompaniesAsync()
         {
-            return await _context.Compagny.ToListAsync();
+            return await _context.Companies.ToListAsync();
         }
 
         // Implémentation de la méthode pour récupérer l'entreprise avec ses candidatures
         public async Task<Company?> GetCompanyWithCandidaturesAsync(int id)
         {
-            return await _context.Compagny
+            return await _context.Companies
                 .Include(c => c.Name) // Charge la liste des candidatures liées à cette boîte
                 .FirstOrDefaultAsync(c => c.Id == id);
         }

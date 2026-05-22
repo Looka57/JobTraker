@@ -18,11 +18,13 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     //**b. Le specifique
 builder.Services.AddScoped<ICandidatureRepository, CandidatureRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IInteractionRepository, InteractionRepository>();
 
 // 3. Les services
 // 3. Les services
 builder.Services.AddScoped<ICandidatureService, CandidatureService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IInteractionService, InteractionService>();
 
 
 //4. AutoMapper
