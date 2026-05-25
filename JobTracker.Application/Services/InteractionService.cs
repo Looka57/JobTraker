@@ -2,6 +2,7 @@
 using JobTracker.Application.DTOs;
 using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
+using JobTracker.Domain.Enums;
 using JobTracker.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -41,18 +42,53 @@ namespace JobTracker.Application.Services
             return _mapper.Map<InteractionReadDto>(interaction);
         }
 
+
         public async Task<InteractionReadDto> CreateInteractionAsync(InteractionCreateDto dto)
         {
-            var interaction = _mapper.Map<Interaction>(dto);
+            // 1. SÉCURITÉ : On vérifie si la candidature existe AVANT de créer l'interaction
+            var candidature = await _candidatureRepository.GetByIdAsync(dto.CandidatureId);
 
-            interaction.CreatedAt = DateTime.UtcNow; // On force la date du jour
+            if (candidature == null)
+            {
+                // On lève une exception précise. 
+                // KeyNotFoundException est parfaite pour dire "Ressource introuvable" (404)
+                throw new KeyNotFoundException($"La candidature avec l'ID {dto.CandidatureId} n'existe pas.");
+            }
+
+            // 2. Si elle existe, on continue le process normal
+            var interaction = _mapper.Map<Interaction>(dto);
+            interaction.CreatedAt = DateTime.UtcNow;
 
             await _interactionRepository.AddAsync(interaction);
             await _interactionRepository.SaveChangesAsync();
 
+            // 3. Logique de mise à jour automatique (déjà sécurisée puisque candidature n'est plus nulle !)
+            switch (interaction.Type)
+            {
+                case TypeInteraction.AppelRh:
+                case TypeInteraction.Entretiens:
+                case TypeInteraction.EntretienTechnique:
+                case TypeInteraction.EntretienFinal:
+                    candidature.Status = JobStatus.Entretien;
+                    break;
+
+                case TypeInteraction.Refus:
+                    candidature.Status = JobStatus.Refusé;
+                    break;
+
+                case TypeInteraction.OffreRecu:
+                    candidature.Status = JobStatus.Accepté;
+                    break;
+
+                default:
+                    break;
+            }
+
+            _candidatureRepository.Update(candidature);
+            await _candidatureRepository.SaveChangesAsync();
+
             return _mapper.Map<InteractionReadDto>(interaction);
         }
-
         public async Task<bool> UpdateInteractionAsync(int id, InteractionUpdateDto dto)
         {
             var existing = await _interactionRepository.GetByIdAsync(id);

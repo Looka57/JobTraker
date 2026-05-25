@@ -1,4 +1,5 @@
 using AutoMapper;
+using JobTracker.API.Middlewares;
 using JobTracker.Application.Interfaces;
 using JobTracker.Application.Mappings;
 using JobTracker.Application.Services;
@@ -37,6 +38,9 @@ builder.Services.AddSwaggerGen(); // installation Swashbuckle.AspNetCore
 
 
 var app = builder.Build();
+
+//5.Middlewares
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
