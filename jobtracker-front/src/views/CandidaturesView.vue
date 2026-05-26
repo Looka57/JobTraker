@@ -1,147 +1,225 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 
-// 1. On crée une variable réactive pour stocker nos candidatures
+// Importation des composants PrimeVue dont on a besoin
+import Card from 'primevue/card'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Button from 'primevue/button'
+
 const candidatures = ref([])
 const chargement = ref(true)
 const erreur = ref(null)
 
-// 2. Fonction qui va appeler ton API .NET
 const chargerCandidatures = async () => {
     try {
         chargement.value = true
-        // ⚠️ Remplace le port 7265 par le vrai port de TON API .NET (regarde ton URL Swagger)
         const response = await axios.get('https://localhost:7265/api/Candidatures')
-
         candidatures.value = response.data
     } catch (err) {
-        console.error("Erreur lors du fetch :", err)
-        erreur.value = "Impossible de charger les candidatures. Vérifie que le Back-End tourne et que le CORS est activé !"
+        console.error(err)
+        erreur.value = "Impossible de joindre l'API .NET."
     } finally {
         chargement.value = false
     }
 }
 
-// 3. On dit à Vue d'exécuter la fonction dès que la page s'affiche à l'écran
+// Comptes pour tes 3 boîtes (comme sur ton croquis)
+const totalRefuse = computed(() => candidatures.value.filter(c => c.statut === 'Refusé').length)
+const totalAccepte = computed(() => candidatures.value.filter(c => c.statut === 'Accepté').length)
+const totalEnCours = computed(() => candidatures.value.filter(c => c.statut === 'En cours').length)
+
 onMounted(() => {
     chargerCandidatures()
 })
 </script>
 
 <template>
-    <div class="container">
-        <h1>📋 Suivi de mes Candidatures</h1>
-
-        <div v-if="chargement" class="info-box loading">
-            ⏳ Récupération des données depuis l'API C#...
+    <div class="dashboard-container">
+        <div class="header-zone">
+            <h2>Tableau de bord</h2>
+            <div class="date-badge">
+                <i class="pi pi-calendar"></i>
+                <span>{{ new Date().toLocaleDateString() }}</span>
+            </div>
         </div>
 
-        <div v-else-if="erreur" class="info-box error">
-            ❌ {{ erreur }}
-        </div>
+        <div v-if="chargement" class="status-msg text-info">⏳ Connexion à l'API .NET...</div>
+        <div v-else-if="erreur" class="status-msg text-error">❌ {{ erreur }}</div>
 
-        <div v-else class="table-container">
-            <table v-if="candidatures.length > 0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Poste</th>
-                        <th>Entreprise</th>
-                        <th>Type de Contrat</th>
-                        <th>Motivation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="candidature in candidatures" :key="candidature.id">
-                        <td>{{ candidature.id }}</td>
-                        <td class="bold">{{ candidature.poste }}</td>
-                        <td>{{ candidature.company?.name || 'Non spécifiée' }}</td>
-                        <td><span class="badge">{{ candidature.typeContrat }}</span></td>
-                        <td>⭐ {{ candidature.niveauMotivation }}/5</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div v-else>
+            <div class="stats-grid">
+                <Card class="stat-card refuse">
+                    <template #title><span class="card-title">Refusé</span></template>
+                    <template #content><span class="card-value">{{ totalRefuse }}</span></template>
+                </Card>
 
-            <p v-else class="empty-message">Aucune candidature trouvée. Ajoutes-en une depuis Swagger pour tester !</p>
+                <Card class="stat-card accepte">
+                    <template #title><span class="card-title">Accepté</span></template>
+                    <template #content><span class="card-value">{{ totalAccepte }}</span></template>
+                </Card>
+
+                <Card class="stat-card encours">
+                    <template #title><span class="card-title">En cours</span></template>
+                    <template #content><span class="card-value">{{ totalEnCours }}</span></template>
+                </Card>
+            </div>
+
+            <Card class="table-card">
+                <template #title>
+                    <div class="table-header">Liste des candidatures</div>
+                </template>
+                <template #content>
+                    <DataTable :value="candidatures" responsiveLayout="scroll" class="p-datatable-sm">
+                        <Column field="poste" header="Poste" font-weight="bold"></Column>
+                        <Column field="company.name" header="Entreprise">
+                            <template #body="slotProps">
+                                {{ slotProps.data.company?.name || 'Non spécifiée' }}
+                            </template>
+                        </Column>
+                        <Column field="statut" header="Statut">
+                            <template #body="slotProps">
+                                <span class="status-badge"
+                                    :class="slotProps.data.statut?.toLowerCase().replace(' ', '')">
+                                    {{ slotProps.data.statut }}
+                                </span>
+                            </template>
+                        </Column>
+                        <Column field="niveauMotivation" header="Motivation">
+                            <template #body="slotProps">
+                                ⭐ {{ slotProps.data.niveauMotivation }}/5
+                            </template>
+                        </Column>
+                        <Column header="Actions" headerStyle="text-align: right" bodyStyle="text-align: right">
+                            <template #body>
+                                <Button icon="pi pi-check" severity="success" text rounded class="mr-2" />
+                                <Button icon="pi pi-times" severity="danger" text rounded />
+                            </template>
+                        </Column>
+                    </DataTable>
+                </template>
+            </Card>
         </div>
     </div>
 </template>
 
 <style scoped>
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
+.header-zone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
-h1 {
-    color: #2c3e50;
-    margin-bottom: 20px;
+.header-zone h2 {
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0;
 }
 
-.info-box {
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.loading {
-    background-color: #e2e8f0;
-    color: #4a5568;
-}
-
-.error {
-    background-color: #fed7d7;
-    color: #9b2c2c;
-    border: 1px solid #feb2b2;
-}
-
-.table-container {
-    background: white;
+.date-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #ffffff;
+    padding: 0.5rem 1rem;
     border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 0.9rem;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-th,
-td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-th {
-    background-color: #edf2f7;
-    color: #4a5568;
-    font-weight: bold;
-}
-
-tr:hover {
-    background-color: #f7fafc;
-}
-
-.bold {
-    font-weight: bold;
-    color: #2d3748;
-}
-
-.badge {
-    background-color: #ebf8ff;
-    color: #2b6cb0;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    font-weight: bold;
-}
-
-.empty-message {
-    padding: 20px;
+.stat-card {
     text-align: center;
-    color: #718096;
+    border: 1px solid #e2e8f0;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Couleurs personnalisées pour coller à ton dessin */
+.refuse {
+    background-color: #fef2f2;
+    border-color: #fee2e2;
+}
+
+.refuse .card-value,
+.refuse .card-title {
+    color: #dc2626;
+}
+
+.accepte {
+    background-color: #f0fdf4;
+    border-color: #dcfce7;
+}
+
+.accepte .card-value,
+.accepte .card-title {
+    color: #16a34a;
+}
+
+.encours {
+    background-color: #fffbeb;
+    border-color: #fef3c7;
+}
+
+.encours .card-value,
+.encours .card-title {
+    color: #d97706;
+}
+
+.table-card {
+    border: 1px solid #e2e8f0;
+}
+
+.table-header {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-badge.refusé {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.accepté {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.encours {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-msg {
+    padding: 1rem;
+    border-radius: 6px;
+    background: white;
+    border: 1px solid #e2e8f0;
 }
 </style>
