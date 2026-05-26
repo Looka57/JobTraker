@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-layout">
-    
+
     <aside class="sidebar">
       <div>
         <div class="brand">
@@ -8,18 +8,26 @@
           <span>JobTracker</span>
         </div>
         <nav class="nav-links">
-          <a href="#" class="nav-item active">
+          <router-link to="/" class="nav-item active">
             <i class="pi pi-chart-bar"></i>
             <span>Dashboard</span>
-          </a>
-          <a href="#" class="nav-item">
+          </router-link>
+          <router-link to="/candidatures" class="nav-item">
             <i class="pi pi-list"></i>
             <span>Candidatures</span>
-          </a>
-          <a href="#" class="nav-item">
+          </router-link>
+          <router-link to="/entreprises" class="nav-item">
             <i class="pi pi-building"></i>
             <span>Entreprises</span>
-          </a>
+          </router-link>
+          <router-link to="/notes" class="nav-item">
+            <i class="pi pi-clipboard"></i>
+            <span>Notes</span>
+          </router-link>
+          <router-link to="/recherche" class="nav-item">
+            <i class="pi pi-search"></i>
+            <span>Recherche</span>
+          </router-link>
         </nav>
       </div>
       <div class="version">Version 1.0</div>
