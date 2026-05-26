@@ -4,6 +4,7 @@ import axios from 'axios'
 import Card from 'primevue/card'
 // 1. On importe notre composant tout neuf !
 import ListeCandidatures from '../components/ListeCandidatures.vue'
+import Statistiques from '@/components/Statistiques.vue'
 
 const candidatures = ref([])
 const chargement = ref(true)
@@ -34,7 +35,7 @@ onMounted(() => {
 <template>
     <div class="dashboard-container">
         <div class="header-zone">
-            <h2>📊 Mon Tableau de bord</h2>
+            <h1>📊 Mon Tableau de bord</h1>
             <div class="date-badge">
                 <i class="pi pi-calendar"></i>
                 <span>{{ new Date().toLocaleDateString() }}</span>
@@ -64,8 +65,14 @@ onMounted(() => {
                 <template #title>
                     <div class="table-header">📋 Les 5 dernières candidatures</div>
                 </template>
+
                 <template #content>
                     <ListeCandidatures :donnees="candidatures" :limite="5" />
+                </template>
+            </Card>
+            <Card class="table-card-stats">
+                <template #content>
+                    <Statistiques />
                 </template>
             </Card>
         </div>
@@ -73,7 +80,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* (Garde le même style CSS qu'on avait avant pour les grilles et les cartes) */
 .header-zone {
     display: flex;
     justify-content: space-between;
@@ -81,7 +87,7 @@ onMounted(() => {
     margin-bottom: 2rem;
 }
 
-.header-zone h2 {
+.header-zone h1 {
     color: #1e293b;
     font-weight: 700;
     margin: 0;
@@ -157,9 +163,10 @@ onMounted(() => {
 }
 
 .table-header {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: #1e293b;
+    padding-bottom: 20px;
 }
 
 .status-msg {
@@ -167,5 +174,9 @@ onMounted(() => {
     border-radius: 6px;
     background: white;
     border: 1px solid #e2e8f0;
+}
+
+.table-card-stats {
+    margin-top: 2rem;
 }
 </style>

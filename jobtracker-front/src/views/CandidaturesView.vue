@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <h2 class="fw-bold mb-4">📋 Historique complet de mes candidatures</h2>
+        <h1 class="fw-bold mb-4">📋 Historique complet de mes candidatures</h1>
 
         <div v-if="chargement">⏳ Chargement...</div>
         <div v-else-if="erreur" class="text-error">❌ {{ erreur }}</div>

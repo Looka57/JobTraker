@@ -24,7 +24,7 @@
             <i class="pi pi-clipboard"></i>
             <span>Notes</span>
           </router-link>
-          <router-link to="/recherche" class="nav-item">
+          <router-link to="/recherches" class="nav-item">
             <i class="pi pi-search"></i>
             <span>Recherche</span>
           </router-link>

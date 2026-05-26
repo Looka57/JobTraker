@@ -1,6 +1,8 @@
 import DashboardView from '@/views/DashboardView.vue';
 import CandidaturesView from '../views/CandidaturesView.vue'
 import CompaniesView from '../views/CompaniesView.vue'
+import NotesView from '../views/NotesView.vue'
+import RecherchesView from '../views/RecherchesView.vue'
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -20,6 +22,17 @@ const router = createRouter({
       path: "/entreprises",
       name: "entreprises",
       component:  CompaniesView,
+
+    },
+    {
+      path: "/notes",
+      name: "notes",
+      component:  NotesView,
+    },
+    {
+      path: "/recherches",
+      name: "recherches",
+      component:  RecherchesView,
 
     },
   ],
