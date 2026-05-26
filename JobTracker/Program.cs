@@ -31,15 +31,27 @@ builder.Services.AddScoped<IInteractionService, InteractionService>();
 //4. AutoMapper
 builder.Services.AddAutoMapper(typeof(CandidatureProfile));
 
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); // installation Swashbuckle.AspNetCore
 
+//5. CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowVueApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:3000") // Les ports par défaut de Vue/Vite
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
-//5.Middlewares
+app.UseCors("AllowVueApp");
+
+//6.Middlewares
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
