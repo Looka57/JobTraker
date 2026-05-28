@@ -11,7 +11,7 @@ const candidature = ref({
     urlAnnonce: ''
 });
 
-// TODO: Implémenter la logique pour envoyer les données de candidature à l'API .NET et recuperer les 
+// TODO: Implémenter la logique pour envoyer les données de candidature à l'API .NET et recuperer les propriéte des tables pour les inputs des formulaires
 const soumettreCandidature = () => {
     // Maintenant, Vue sait ce qu'est "candidature"
     console.log("Données récupérées :", candidature.value);

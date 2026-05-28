@@ -34,10 +34,10 @@ const candidaturesFiltrees = computed(() => {
                 {{ slotProps.data.company?.name || 'Non spécifiée' }}
             </template>
         </Column>
-        <Column field="statut" header="Statut">
+        <Column field="statut" header="Status">
             <template #body="slotProps">
                 <span class="status-badge" :class="slotProps.data.statut?.toLowerCase().replace(' ', '')">
-                    {{ slotProps.data.statut }}
+                    {{ slotProps.data.status || 'Inconnu' }}
                 </span>
             </template>
         </Column>
@@ -46,9 +46,9 @@ const candidaturesFiltrees = computed(() => {
                 ⭐ {{ slotProps.data.niveauMotivation }}/5
             </template>
         </Column>
-        <Column header="Actions" headerStyle="text-align: right" bodyStyle="text-align: right">
+        <Column header="Actions">
             <template #body>
-                <Button icon="pi pi-check" severity="success" text rounded />
+                <Button icon="pi pi-file-edit" severity="success" text rounded />
                 <Button icon="pi pi-times" severity="danger" text rounded />
             </template>
         </Column>
