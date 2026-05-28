@@ -2,9 +2,10 @@
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import Card from 'primevue/card'
-// 1. On importe notre composant tout neuf !
+import Button from 'primevue/button'
 import ListeCandidatures from '../components/ListeCandidatures.vue'
 import Statistiques from '@/components/Statistiques.vue'
+
 
 const candidatures = ref([])
 const chargement = ref(true)
@@ -65,9 +66,14 @@ onMounted(() => {
                 <template #title>
                     <div class="table-header">📋 Les 5 dernières candidatures</div>
                 </template>
-
                 <template #content>
                     <ListeCandidatures :donnees="candidatures" :limite="5" />
+                    <router-link to="/FormAjtCandidature">
+
+                        <div class="btn-candidature">
+                            <Button label="Ajout candidature" severity="secondary" raised />
+                        </div>
+                    </router-link>
                 </template>
             </Card>
             <Card class="table-card-stats">
@@ -178,5 +184,10 @@ onMounted(() => {
 
 .table-card-stats {
     margin-top: 2rem;
+}
+
+.btn-candidature {
+    margin-top: 1rem;
+    text-align: center;
 }
 </style>

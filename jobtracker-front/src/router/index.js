@@ -1,8 +1,3 @@
-import DashboardView from '@/views/DashboardView.vue';
-import CandidaturesView from '../views/CandidaturesView.vue'
-import CompaniesView from '../views/CompaniesView.vue'
-import NotesView from '../views/NotesView.vue'
-import RecherchesView from '../views/RecherchesView.vue'
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -11,29 +6,32 @@ const router = createRouter({
     {
       path: "/",
       name: "dashboard",
-      component:  DashboardView,
+      component: () => import("@/views/DashboardView.vue"),
     },
     {
       path: "/candidatures",
       name: "candidatures",
-      component:  CandidaturesView,
+      component: () => import("../views/CandidaturesView.vue"),
+    },
+    {
+      path: "/FormAjtCandidature",
+      name: "form-ajt-candidature",
+      component: () => import("../views/FormAjtCandidatureView.vue"),
     },
     {
       path: "/entreprises",
       name: "entreprises",
-      component:  CompaniesView,
-
+      component: () => import("../views/CompaniesView.vue"),
     },
     {
       path: "/notes",
       name: "notes",
-      component:  NotesView,
+      component: () => import("../views/NotesView.vue"),
     },
     {
       path: "/recherches",
       name: "recherches",
-      component:  RecherchesView,
-
+      component: () => import("../views/RecherchesView.vue"),
     },
   ],
 });

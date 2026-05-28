@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Card from 'primevue/card'
 import ListeCandidatures from '../components/ListeCandidatures.vue'
+import GraphiqueDasboard from '../components/GraphiqueDasboard.vue'
 
 const candidatures = ref([])
 const chargement = ref(true)
@@ -38,6 +39,7 @@ onMounted(() => {
                 <ListeCandidatures :donnees="candidatures" />
             </template>
         </Card>
+        <GraphiqueDasboard />
     </div>
 </template>
 

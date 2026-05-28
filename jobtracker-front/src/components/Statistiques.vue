@@ -14,7 +14,7 @@ import Button from 'primevue/button';
             <p>42</p>
             <router-link to="/candidatures">
                 <Button label="En savoir plus" severity="info" variant="text" raised />
-                <!-- TODO: Ajouter l'ancre pour faire atterir le bon graphique selon le bouton cliqué         -->
+                <!-- TODO: Ajouter l'ancre pour faire atterir le bon graphique selon le bouton cliqué-->
             </router-link>
         </div>
 
@@ -35,6 +35,13 @@ import Button from 'primevue/button';
         </div>
     </div>
 </template>
+
+    <!-- TODO: Récupérer les données réelles depuis l'API .NET et les afficher dans les cartes statistiques.
+    FIXME: Implémenter la récupération des données depuis l'API
+    NOTE: Les valeurs affichées sont temporaires
+    BUG: Activer les logs pour le débogage
+    HACK: Ajouter des graphiques pour une meilleure visualisation des statistiques
+    OPTIMIZE: Organiser le code pour une meilleure maintenabilité -->
 
 <style scoped>
 .cardsStats {
