@@ -1,104 +1,93 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
+import DialogActionTable from './DialogActionTable.vue'
 
-// On définit les "props" pour recevoir les données depuis la page parente
+// props
 const props = defineProps({
-    donnees: {
-        type: Array,
-        required: true
-    },
-    limite: {
-        type: Number,
-        default: null // Si pas de limite, on affiche tout
-    }
+    donnees: Array,
+    limite: Number
 })
 
-// On filtre le tableau si une limite est demandée (ex: les 5 dernières)
+// STATE DIALOG
+const visible = ref(false)
+const selectedCandidature = ref(null)
+
+// OPEN DIALOG
+function editDialog(candidature) {
+    selectedCandidature.value = { ...candidature }
+    visible.value = true
+}
+
+// DELETE
+function deleteCandidature(candidature) {
+    console.log('DELETE', candidature)
+}
+
+// FILTER
 const candidaturesFiltrees = computed(() => {
     if (props.limite && props.donnees.length > props.limite) {
-        // On prend les X derniers éléments
         return props.donnees.slice(-props.limite).reverse()
     }
-    return [...props.donnees].reverse() // Par défaut, on affiche du plus récent au plus ancien
+    return [...props.donnees].reverse()
 })
 </script>
 
 <template>
 
-    <DataTable :value="candidaturesFiltrees" responsiveLayout="scroll" class="p-datatable-sm">
-        <Column field="poste" header="Poste"></Column>
-        <Column field="company.name" header="Entreprise">
-            <template #body="slotProps">
-                {{ slotProps.data.company?.name || 'Non spécifiée' }}
-            </template>
-        </Column>
-        <Column field="status" header="Status">
-            <template #body="slotProps">
-                <span class="status-badge"
-                    :class="slotProps.data.statusLibelle?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(' ', '')">
-                    {{ slotProps.data.statusLibelle || 'Inconnu' }}
-                </span>
-            </template>
-        </Column>
-        <Column field="niveauMotivation" header="Motivation">
-            <template #body="slotProps">
-                ⭐ {{ slotProps.data.niveauMotivation }}/5
-            </template>
-        </Column>
-        <Column header="Actions">
-            <template #body>
-                <Button icon="pi pi-file-edit" severity="success" text rounded />
-                <Button icon="pi pi-times" severity="danger" text rounded />
-            </template>
-        </Column>
-    </DataTable>
+<DataTable :value="candidaturesFiltrees">
+
+    <Column field="poste" header="Poste" />
+
+    <Column header="Entreprise">
+        <template #body="slotProps">
+            {{ slotProps.data.company?.name }}
+        </template>
+    </Column>
+
+    <Column header="Status">
+        <template #body="slotProps">
+            {{ slotProps.data.statusLibelle }}
+        </template>
+    </Column>
+
+    <Column header="Motivation">
+        <template #body="slotProps">
+            ⭐ {{ slotProps.data.niveauMotivation }}/5
+        </template>
+    </Column>
+
+    <!-- ACTIONS -->
+    <Column header="Actions">
+        <template #body="slotProps">
+
+            <Button
+                icon="pi pi-file-edit"
+                severity="success"
+                text
+                rounded
+                @click="editDialog(slotProps.data)"
+            />
+
+            <Button
+                icon="pi pi-times"
+                severity="danger"
+                text
+                rounded
+                @click="deleteCandidature(slotProps.data)"
+            />
+
+        </template>
+    </Column>
+
+</DataTable>
+
+<!-- DIALOG ICI (PAS DANS COLUMN !) -->
+<DialogActionTable
+    v-model:visible="visible"
+    :candidature="selectedCandidature"
+/>
+
 </template>
-
-
-<style scoped>
-.status-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-/* Brouillon */
-.status-badge.brouillon {
-    background-color: #e5e7eb;
-    color: #374151;
-}
-
-/* Envoyée */
-.status-badge.envoyee {
-    background-color: #dbeafe;
-    color: #1d4ed8;
-}
-
-/* Suivi */
-.status-badge.suivi {
-    background-color: #f3e8ff;
-    color: #6b21a8;
-}
-
-/* Entretien */
-.status-badge.entretien {
-    background-color: #fef3c7;
-    color: #92400e;
-}
-
-/* Accepté */
-.status-badge.accepte {
-    background-color: #dcfce7;
-    color: #166534;
-}
-
-/* Refusé */
-.status-badge.refuse {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-</style>

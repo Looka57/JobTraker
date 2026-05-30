@@ -4,6 +4,7 @@ import axios from 'axios'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
+import DialogActionTable from './DialogActionTable.vue'
 
 
 const entreprises = ref([])
@@ -36,8 +37,9 @@ onMounted(async () => {
         </Column>
         <Column header="Actions" >
             <template #body>
-                <Button icon="pi pi-file-edit" severity="success" text rounded />
-                <Button icon="pi pi-times" severity="danger" text rounded />
+                
+                <Button label="Modifier" icon="pi pi-file-edit" severity="success" text rounded />  
+                <Button label="Supprimer" icon="pi pi-times" severity="danger" text rounded />
             </template>
         </Column>
     </DataTable>
