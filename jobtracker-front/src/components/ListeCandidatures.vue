@@ -27,6 +27,7 @@ const candidaturesFiltrees = computed(() => {
 </script>
 
 <template>
+
     <DataTable :value="candidaturesFiltrees" responsiveLayout="scroll" class="p-datatable-sm">
         <Column field="poste" header="Poste"></Column>
         <Column field="company.name" header="Entreprise">
@@ -34,10 +35,11 @@ const candidaturesFiltrees = computed(() => {
                 {{ slotProps.data.company?.name || 'Non spécifiée' }}
             </template>
         </Column>
-        <Column field="statut" header="Status">
+        <Column field="status" header="Status">
             <template #body="slotProps">
-                <span class="status-badge" :class="slotProps.data.statut?.toLowerCase().replace(' ', '')">
-                    {{ slotProps.data.status || 'Inconnu' }}
+                <span class="status-badge"
+                    :class="slotProps.data.statusLibelle?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(' ', '')">
+                    {{ slotProps.data.statusLibelle || 'Inconnu' }}
                 </span>
             </template>
         </Column>
@@ -55,6 +57,7 @@ const candidaturesFiltrees = computed(() => {
     </DataTable>
 </template>
 
+
 <style scoped>
 .status-badge {
     padding: 0.25rem 0.5rem;
@@ -63,18 +66,39 @@ const candidaturesFiltrees = computed(() => {
     font-weight: 600;
 }
 
-.status-badge.refusé {
-    background-color: #fee2e2;
-    color: #991b1b;
+/* Brouillon */
+.status-badge.brouillon {
+    background-color: #e5e7eb;
+    color: #374151;
 }
 
-.status-badge.accepté {
+/* Envoyée */
+.status-badge.envoyee {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Suivi */
+.status-badge.suivi {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+
+/* Entretien */
+.status-badge.entretien {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* Accepté */
+.status-badge.accepte {
     background-color: #dcfce7;
     color: #166534;
 }
 
-.status-badge.encours {
-    background-color: #fef3c7;
-    color: #92400e;
+/* Refusé */
+.status-badge.refuse {
+    background-color: #fee2e2;
+    color: #991b1b;
 }
 </style>

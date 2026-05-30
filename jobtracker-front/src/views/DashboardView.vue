@@ -62,18 +62,20 @@ onMounted(() => {
                 </Card>
             </div>
 
+            <!-- LEs 5 dernières candidatures -->
             <Card class="table-card">
                 <template #title>
-                    <div class="table-header">📋 Les 5 dernières candidatures</div>
+                    <div class="table-header ">
+                        <h3>📋 Les 5 dernières candidatures</h3>
+                        <router-link to="/FormAjtCandidature">
+                            <Button label="Ajout candidature" severity="secondary" raised />
+                 
+                    </router-link>
+                    </div>
                 </template>
                 <template #content>
                     <ListeCandidatures :donnees="candidatures" :limite="5" />
-                    <router-link to="/FormAjtCandidature">
-
-                        <div class="btn-candidature">
-                            <Button label="Ajout candidature" severity="secondary" raised />
-                        </div>
-                    </router-link>
+                
                 </template>
             </Card>
             <Card class="table-card-stats">
@@ -169,6 +171,9 @@ onMounted(() => {
 }
 
 .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 1.4rem;
     font-weight: 600;
     color: #1e293b;

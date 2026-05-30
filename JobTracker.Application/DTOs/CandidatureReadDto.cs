@@ -18,6 +18,8 @@ namespace JobTracker.Application.DTOs
 
         public JobStatus Status { get; set; }
 
+        public string StatusLibelle => Status.ToString();
+
         public DateTime DateCandidature { get; set; }
 
         public int NiveauMotivation { get; set; }   
