@@ -33,61 +33,48 @@ const candidaturesFiltrees = computed(() => {
     }
     return [...props.donnees].reverse()
 })
+
 </script>
 
 <template>
-
-<DataTable :value="candidaturesFiltrees">
-
-    <Column field="poste" header="Poste" />
-
-    <Column header="Entreprise">
-        <template #body="slotProps">
-            {{ slotProps.data.company?.name }}
-        </template>
-    </Column>
-
-    <Column header="Status">
-        <template #body="slotProps">
-            {{ slotProps.data.statusLibelle }}
-        </template>
-    </Column>
-
-    <Column header="Motivation">
-        <template #body="slotProps">
-            ⭐ {{ slotProps.data.niveauMotivation }}/5
-        </template>
-    </Column>
-
-    <!-- ACTIONS -->
-    <Column header="Actions">
-        <template #body="slotProps">
-
-            <Button
-                icon="pi pi-file-edit"
-                severity="success"
-                text
-                rounded
-                @click="editDialog(slotProps.data)"
-            />
-
-            <Button
-                icon="pi pi-times"
-                severity="danger"
-                text
-                rounded
-                @click="deleteCandidature(slotProps.data)"
-            />
-
-        </template>
-    </Column>
-
-</DataTable>
-
-<!-- DIALOG ICI (PAS DANS COLUMN !) -->
-<DialogActionTable
-    v-model:visible="visible"
-    :candidature="selectedCandidature"
-/>
-
+    <DataTable :value="candidaturesFiltrees">
+        <Column field="poste" header="Poste" />
+        <Column header="Entreprise">
+            <template #body="slotProps">
+                {{ slotProps.data.name || 'Inconnue' }}
+            </template>
+        </Column>
+        <Column header="Status">
+            <template #body="slotProps">
+                {{ slotProps.data.statusLibelle }}
+            </template>
+        </Column>
+        <Column header="Motivation">
+            <template #body="slotProps">
+                ⭐ {{ slotProps.data.niveauMotivation }}/5
+            </template>
+        </Column>
+        <Column header="Url de l'offre">
+            <template #body="slotProps">
+                <a :href="slotProps.data.urlOffre" target="_blank" rel="noopener noreferrer"> Voir l'offre </a>
+            </template>
+        </Column>
+        <!-- ACTIONS -->
+        <Column header="Actions">
+            <template #body="slotProps">
+                <Button icon="pi pi-file-edit" severity="success" text rounded @click="editDialog(slotProps.data)" />
+                <Button icon="pi pi-times" severity="danger" text rounded @click="deleteCandidature(slotProps.data)" />
+            </template>
+        </Column>
+    </DataTable>
+    <DialogActionTable v-model:visible="visible" :candidature="selectedCandidature" />
 </template>
+
+
+<style scoped>
+a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+</style>

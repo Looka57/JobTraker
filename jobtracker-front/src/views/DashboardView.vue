@@ -75,7 +75,6 @@ onMounted(() => {
                 </template>
                 <template #content>
                     <ListeCandidatures :donnees="candidatures" :limite="5" />
-                
                 </template>
             </Card>
             <Card class="table-card-stats">

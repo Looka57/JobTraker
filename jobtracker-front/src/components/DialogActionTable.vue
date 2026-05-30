@@ -14,6 +14,7 @@ const emit = defineEmits(['update:visible'])
 const localCandidature = ref({})
 
 watch(() => props.candidature, (val) => {
+    console.log("Données reçuSs :", val);
     if (val) localCandidature.value = { ...val }
 }, { immediate: true })
 
@@ -39,14 +40,23 @@ function save() {
             </div>
 
             <div class="field-row">
+                <label for="typeContrat">Entreprise</label>
+                <InputText id="typeContrat" v-model="localCandidature.name" class="input-field" />
+            </div>
+
+            <div class="field-row">
                 <label for="salaire">Salaire (€)</label>
                 <InputNumber id="salaire" v-model="localCandidature.salaire" class="input-field" />
             </div>
 
             <div class="field-row">
-                <label for="motivation">Motivation /10</label>
-                <InputNumber id="motivation" v-model="localCandidature.niveauMotivation" :min="0" :max="10"
+                <label for="motivation">Motivation /5</label>
+                <InputNumber id="motivation" v-model="localCandidature.niveauMotivation" :min="0" :max="5"
                     class="input-field" />
+            </div>
+            <div class="field-row">
+                <label for="urlOffre">Url de l'offre</label>
+                <InputText id="urlOffre" v-model="localCandidature.urlOffre" class="input-field" />
             </div>
         </div>
 
@@ -58,7 +68,7 @@ function save() {
 </template>
 
 <style scoped>
-.form-container {
+.form-container {   
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
