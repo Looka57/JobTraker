@@ -4,12 +4,39 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import DialogActionTable from './DialogActionTable.vue'
+import Badge from 'primevue/badge'
 
 // props
 const props = defineProps({
     donnees: Array,
     limite: Number
 })
+
+// //Badge couleur
+const getStatusClass = (status) => {
+    switch (status) {
+        case 'Brouillon':
+            return 'status-brouillon';
+
+        case 'Envoyée':
+            return 'status-envoyee';
+
+        case 'Suivi':
+            return 'status-suivi';
+
+        case 'Entretien':
+            return 'status-entretien';
+
+        case 'Accepté':
+            return 'status-accepte';
+
+        case 'Refusé':
+            return 'status-refuse';
+
+        default:
+            return 'status-default';
+    }
+}
 
 // STATE DIALOG
 const visible = ref(false)
@@ -44,11 +71,14 @@ const candidaturesFiltrees = computed(() => {
                 {{ slotProps.data.name || 'Inconnue' }}
             </template>
         </Column>
-        <Column header="Status">
-            <template #body="slotProps">
-                {{ slotProps.data.statusLibelle }}
-            </template>
-        </Column>
+  <Column header="Status">
+    <template #body="slotProps">
+        <Badge
+            :value="slotProps.data.statusLibelle"
+            :class="getStatusClass(slotProps.data.statusLibelle)"
+        />
+    </template>
+</Column>
         <Column header="Motivation">
             <template #body="slotProps">
                 ⭐ {{ slotProps.data.niveauMotivation }}/5
@@ -76,5 +106,36 @@ a {
     color: #3b82f6;
     text-decoration: none;
 }
+
+.status-brouillon {
+    background: #e5e7eb !important;
+    color: #374151 !important;
+}
+
+.status-envoyee {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+}
+
+.status-suivi {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.status-entretien {
+    background: #ddd6fe !important;
+    color: #5b21b6 !important;
+}
+
+.status-accepte {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+}
+
+.status-refuse {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+}
+
 
 </style>

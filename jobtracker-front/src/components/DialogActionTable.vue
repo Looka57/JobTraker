@@ -63,6 +63,9 @@ function save() {
         <template #footer>
             <Button label="Annuler" text severity="secondary" @click="close" />
             <Button label="Enregistrer" severity="success" icon="pi pi-check" @click="save" />
+
+            <!-- FIXME: L'enregistrement dans la BDD ne se fait pas  -->
+            <!-- FIXME: La suppression dans la BDD ne se fait pas  -->
         </template>
     </Dialog>
 </template>

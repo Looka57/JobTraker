@@ -69,8 +69,7 @@ onMounted(() => {
                         <h3>📋 Les 5 dernières candidatures</h3>
                         <router-link to="/FormAjtCandidature">
                             <Button label="Ajout candidature" severity="secondary" raised />
-                 
-                    </router-link>
+                        </router-link>
                     </div>
                 </template>
                 <template #content>
