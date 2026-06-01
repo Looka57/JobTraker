@@ -5,7 +5,13 @@ import Tabs from 'primevue/tabs'
 import TabList from 'primevue/tablist'
 import Tab from 'primevue/tab'
 
+
 const activeTab = ref('Toutes')
+const notes = ref([])
+const chargement = ref(true)
+const erreur = ref(null)
+const entreprise = ref([])
+
 
 const tabs = ref([
     { label: 'Toutes', value: 'Toutes' },
@@ -43,10 +49,6 @@ const typeLabels = {
     Refus: 'Refusé'
 }
 
-const notes = ref([])
-const chargement = ref(true)
-const erreur = ref(null)
-
 const typeMap = {
     0: 'ContactInitial',
     1: 'Relancement',
@@ -56,6 +58,16 @@ const typeMap = {
     5: 'EntretienFinal',
     6: 'OffreRecu',
     7: 'Refus'
+}
+
+
+const chargerEntreprises = async () => {
+    try {
+        const response = await axios.get('https://localhost:7265/api/Companies')
+        entreprise.value = response.data
+    } catch (err) {
+        console.error("Erreur chargement entreprises", err)
+    }
 }
 
 const getCardClass = (type) => {
@@ -74,7 +86,7 @@ const chargerNotes = async () => {
     } catch (err) {
         console.error(err)
         erreur.value = "Impossible de joindre l'API .NET."
-        
+
         // SCRIPT DE SECOURS (Mock) pour que tu puisses tester le design immédiatement :
         notes.value = [
             { id: 1, notes: 'Développeur - TechCorp - Culture d\'entreprise axée sur l\'innovation. Stack technologique moderne.', type: 'ContactInitial' },
@@ -87,8 +99,11 @@ const chargerNotes = async () => {
     }
 }
 
-onMounted(() => {
-    chargerNotes()
+onMounted(async () => {
+    await Promise.all([
+        chargerNotes(),
+        chargerEntreprises()
+    ])
 })
 
 const filteredNotes = computed(() => {
@@ -98,6 +113,8 @@ const filteredNotes = computed(() => {
 </script>
 
 <template>
+    <pre>{{ notes.entrepriseId }}</pre>
+    
     <div class="notes-container">
         <!-- Barre d'onglets (PrimeVue Tabs) -->
         <Tabs v-model:value="activeTab" class="custom-tabs">
@@ -108,15 +125,23 @@ const filteredNotes = computed(() => {
             </TabList>
         </Tabs>
 
+
         <!-- Grille des cartes de notes -->
         <div class="cards">
             <div v-for="note in filteredNotes" :key="note.id" class="card-note" :class="getCardClass(note.type)">
                 <!-- Contenu de la note -->
-                 <h2>{{ typeLabels[note.type] || note.type }}</h2>
-                   <h4>{{ note.candidatureName }}</h4>
+                <div class="titreNote">
+                    <h2>{{ typeLabels[note.type] || note.type }} </h2>
+                    <div class="action icons">
+                        <i class="pi pi-eye"></i>
+                        <i class="pi pi-file-edit"></i>
+                        <i class="pi pi-times"></i>
+                    </div>
+                </div>
+                   <h4>{{ note.companyName || 'Entreprise inconnue' }}</h4>
                 <p v-if="note.notes" class="note-content">{{ note.notes }}</p>
-                
-                
+
+
                 <!-- Badge (Tag) dynamique -->
                 <div class="tag-wrapper">
                     <span class="tag">{{ typeLabels[note.type] || note.type }}</span>
@@ -129,8 +154,25 @@ const filteredNotes = computed(() => {
 <style scoped>
 .notes-container {
     padding: 20px;
-    background-color: #f8fafc; /* Fond de page très légèrement grisé comme sur la maquette */
+    background-color: #f8fafc;
+    /* Fond de page très légèrement grisé comme sur la maquette */
     min-height: 100vh;
+}
+
+
+.titreNote {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.titreNote .icons {
+    display: flex;
+    gap: 10px;
+    opacity: 0.8;
+    cursor: pointer;
+
 }
 
 /* Grille des cartes */
@@ -160,7 +202,8 @@ const filteredNotes = computed(() => {
 }
 
 .note-content {
-    color: #334155; /* Texte gris foncé / charcoal pour un super contraste */
+    color: #334155;
+    /* Texte gris foncé / charcoal pour un super contraste */
     font-size: 14px;
     line-height: 1.6;
     margin: 0 0 15px 0;
@@ -187,8 +230,9 @@ const filteredNotes = computed(() => {
 
 /* BLEU : Contact Initial / Candidature */
 .card-blue {
-    background-color: #eff6ff; 
+    background-color: #eff6ff;
 }
+
 .card-blue .tag {
     background-color: #dbeafe;
     color: #1e40af;
@@ -198,6 +242,7 @@ const filteredNotes = computed(() => {
 .card-orange {
     background-color: #fffbeb;
 }
+
 .card-orange .tag {
     background-color: #fef3c7;
     color: #b45309;
@@ -207,6 +252,7 @@ const filteredNotes = computed(() => {
 .card-purple {
     background-color: #faf5ff;
 }
+
 .card-purple .tag {
     background-color: #f3e8ff;
     color: #6b21a8;
@@ -216,6 +262,7 @@ const filteredNotes = computed(() => {
 .card-yellow {
     background-color: #fefce8;
 }
+
 .card-yellow .tag {
     background-color: #fef9c3;
     color: #854d0e;
@@ -225,6 +272,7 @@ const filteredNotes = computed(() => {
 .card-indigo {
     background-color: #e0e7ff;
 }
+
 .card-indigo .tag {
     background-color: #c7d2fe;
     color: #3730a3;
@@ -234,6 +282,7 @@ const filteredNotes = computed(() => {
 .card-teal {
     background-color: #f0fdfa;
 }
+
 .card-teal .tag {
     background-color: #ccfbf1;
     color: #115e59;
@@ -243,6 +292,7 @@ const filteredNotes = computed(() => {
 .card-green {
     background-color: #f0fdf4;
 }
+
 .card-green .tag {
     background-color: #dcfce7;
     color: #166534;
@@ -252,6 +302,7 @@ const filteredNotes = computed(() => {
 .card-red {
     background-color: #fef2f2;
 }
+
 .card-red .tag {
     background-color: #fee2e2;
     color: #991b1b;
@@ -261,6 +312,7 @@ const filteredNotes = computed(() => {
 .card-default {
     background-color: #f8fafc;
 }
+
 .card-default .tag {
     background-color: #e2e8f0;
     color: #475569;

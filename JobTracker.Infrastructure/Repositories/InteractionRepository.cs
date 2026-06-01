@@ -2,9 +2,9 @@
 using JobTracker.Domain.Interfaces;
 using JobTracker.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq; // Ne pas oublier pour le .Where
+using System.Threading.Tasks;
 
 namespace JobTracker.Infrastructure.Repositories
 {
@@ -14,11 +14,23 @@ namespace JobTracker.Infrastructure.Repositories
         {
         }
 
+        // 1. Pour charger TOUTES les interactions avec les détails (Pour ton écran principal "Mes Notes")
+        public override async Task<IEnumerable<Interaction>> GetAllAsync()
+        {
+            return await _context.Interactions
+                .Include(i => i.Candidature)
+                    .ThenInclude(c => c.Company)
+                .ToListAsync();
+        }
+
+        // 2. Pour charger les interactions d'une seule candidature spécifique
         public async Task<IEnumerable<Interaction>> GetInteractionsByCandidatureIdAsync(int candidatureId)
         {
             return await _context.Interactions
+                .Include(i => i.Candidature)
+                    .ThenInclude(c => c.Company)
                 .Where(i => i.CandidatureId == candidatureId)
-        .ToListAsync();
+                .ToListAsync();
         }
     }
 }

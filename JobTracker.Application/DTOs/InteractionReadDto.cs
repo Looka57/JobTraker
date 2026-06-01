@@ -12,5 +12,6 @@ namespace JobTracker.Application.DTOs
         public TypeInteraction Type { get; set; }
         public string Notes { get; set; } = string.Empty;
         public int CandidatureId { get; set; }
+        public string? CompanyName { get; set; }
     }
 }
