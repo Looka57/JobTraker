@@ -7,6 +7,7 @@ namespace JobTracker.Application.Interfaces
 {
     public interface IInteractionService
     {
+        Task<IEnumerable<InteractionReadDto>> GetAllInteractionsAsync();
         Task<IEnumerable<InteractionReadDto>> GetInteractionsByCandidatureAsync(int candidatureId);
         Task<InteractionReadDto?> GetInteractionByIdAsync(int id);
         Task<InteractionReadDto> CreateInteractionAsync(InteractionCreateDto dto);

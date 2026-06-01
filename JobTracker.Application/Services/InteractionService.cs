@@ -26,6 +26,12 @@ namespace JobTracker.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<InteractionReadDto>> GetAllInteractionsAsync()
+        {
+            var interactions = await _interactionRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<InteractionReadDto>>(interactions);
+        }
+
         public async Task<IEnumerable<InteractionReadDto>> GetInteractionsByCandidatureAsync(int candidatureId)
         {
             var interactions = await _interactionRepository.GetInteractionsByCandidatureIdAsync(candidatureId);

@@ -66,7 +66,7 @@ const chargerNotes = async () => {
     try {
         chargement.value = true
         // Remplacement temporaire par une simulation si ton API locale n'est pas lancée
-        const response = await axios.get('https://localhost:7265/api/Interactions/candidature/1')
+        const response = await axios.get('https://localhost:7265/api/Interactions')
         notes.value = response.data.map(n => ({
             ...n,
             type: typeMap[n.type]

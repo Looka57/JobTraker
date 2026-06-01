@@ -17,6 +17,16 @@ namespace JobTracker.API.Controllers
             _interactionService = interactionService;
         }
 
+
+        // 1. Récupérer TOUTES les interactions globales (Ajouté/Corrigé)
+        // URL: GET /api/interactions
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<InteractionReadDto>>> GetAll()
+        {
+            var result = await _interactionService.GetAllInteractionsAsync(); // À vérifier si elle existe dans ton service
+            return Ok(result);
+        }
+
         // Récupérer toutes les interactions d'une candidature spécifique
         [HttpGet("candidature/{candidatureId}")]
         public async Task<ActionResult<IEnumerable<InteractionReadDto>>> GetByCandidature(int candidatureId)
