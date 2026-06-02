@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'; // 1. Il faut importer ref
+import { ref } from 'vue'; 
 
 // 2. Il faut déclarer la variable ici pour qu'elle soit connue
 const candidature = ref({
@@ -13,7 +13,6 @@ const candidature = ref({
 
 // TODO: Implémenter la logique pour envoyer les données de candidature à l'API .NET et recuperer les propriéte des tables pour les inputs des formulaires
 const soumettreCandidature = () => {
-    // Maintenant, Vue sait ce qu'est "candidature"
     console.log("Données récupérées :", candidature.value);
     alert("Candidature envoyée ! Vérifiez votre console.");
 }
