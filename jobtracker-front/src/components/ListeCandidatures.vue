@@ -3,8 +3,8 @@ import { computed, ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
+import Select from 'primevue/select' // 1. On importe le composant Select
 import DialogActionTable from './DialogActionTable.vue'
-import Badge from 'primevue/badge'
 
 // props
 const props = defineProps({
@@ -12,30 +12,34 @@ const props = defineProps({
     limite: Number
 })
 
-// //Badge couleur
+// La liste de tes statuts disponibles pour le Select
+const listeStatuts = ref([
+    { label: 'Brouillon' },
+    { label: 'Envoyée' },
+    { label: 'Suivi' },
+    { label: 'Entretien' },
+    { label: 'Accepté' },
+    { label: 'Refusé' }
+])
+
+// Badge couleur basé sur le libellé du statut
 const getStatusClass = (status) => {
     switch (status) {
-        case 'Brouillon':
-            return 'status-brouillon';
-
-        case 'Envoyée':
-            return 'status-envoyee';
-
-        case 'Suivi':
-            return 'status-suivi';
-
-        case 'Entretien':
-            return 'status-entretien';
-
-        case 'Accepté':
-            return 'status-accepte';
-
-        case 'Refusé':
-            return 'status-refuse';
-
-        default:
-            return 'status-default';
+        case 'Brouillon': return 'status-brouillon';
+        case 'Envoyée': return 'status-envoyee';
+        case 'Suivi': return 'status-suivi';
+        case 'Entretien': return 'status-entretien';
+        case 'Accepté': return 'status-accepte';
+        case 'Refusé': return 'status-refuse';
+        default: return 'status-default';
     }
+}
+
+// Fonction appelée quand l'utilisateur change le statut dans le tableau
+const updateStatus = (newValue, candidature) => {
+    console.log(`Changement de statut pour la candidature ${candidature.id || ''} :`, newValue)
+    // C'est ici que tu appelleras ton API axios pour sauvegarder le changement en base de données :
+    // axios.put(`https://localhost:7265/api/Candidatures/${candidature.id}`, { ...candidature, statusLibelle: newValue })
 }
 
 // STATE DIALOG
@@ -60,7 +64,6 @@ const candidaturesFiltrees = computed(() => {
     }
     return [...props.donnees].reverse()
 })
-
 </script>
 
 <template>
@@ -71,14 +74,32 @@ const candidaturesFiltrees = computed(() => {
                 {{ slotProps.data.name || 'Inconnue' }}
             </template>
         </Column>
-  <Column header="Status">
-    <template #body="slotProps">
-        <Badge
-            :value="slotProps.data.statusLibelle"
-            :class="getStatusClass(slotProps.data.statusLibelle)"
-        />
-    </template>
-</Column>
+
+        <Column header="Status">
+            <template #body="slotProps">
+                <Select 
+                    v-model="slotProps.data.statusLibelle" 
+                    :options="listeStatuts" 
+                    optionLabel="label" 
+                    optionValue="label"
+                    @change="(e) => updateStatus(e.value, slotProps.data)"
+                    class="status-dropdown"
+                >
+                    <template #value="valProps">
+                        <span v-if="valProps.value" class="custom-badge" :class="getStatusClass(valProps.value)">
+                            {{ valProps.value }}
+                        </span>
+                    </template>
+
+                    <template #option="optProps">
+                        <span class="custom-badge" :class="getStatusClass(optProps.option.label)">
+                            {{ optProps.option.label }}
+                        </span>
+                    </template>
+                </Select>
+            </template>
+        </Column>
+
         <Column header="Motivation">
             <template #body="slotProps">
                 ⭐ {{ slotProps.data.niveauMotivation }}/5
@@ -89,7 +110,6 @@ const candidaturesFiltrees = computed(() => {
                 <a :href="slotProps.data.urlOffre" target="_blank" rel="noopener noreferrer"> Voir l'offre </a>
             </template>
         </Column>
-        <!-- ACTIONS -->
         <Column header="Actions">
             <template #body="slotProps">
                 <Button icon="pi pi-file-edit" severity="success" text rounded @click="editDialog(slotProps.data)" />
@@ -97,9 +117,9 @@ const candidaturesFiltrees = computed(() => {
             </template>
         </Column>
     </DataTable>
+    
     <DialogActionTable v-model:visible="visible" :candidature="selectedCandidature" />
 </template>
-
 
 <style scoped>
 a {
@@ -107,6 +127,30 @@ a {
     text-decoration: none;
 }
 
+/* On nettoie le Select de PrimeVue pour enlever son fond blanc et ses bordures par défaut */
+:deep(.p-select) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+:deep(.p-select-label) {
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Style de base commun pour émuler l'ancien composant Badge */
+.custom-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Tes classes de couleurs CSS inchangées */
 .status-brouillon {
     background: #e5e7eb !important;
     color: #374151 !important;
@@ -136,6 +180,4 @@ a {
     background: #fee2e2 !important;
     color: #991b1b !important;
 }
-
-
 </style>
