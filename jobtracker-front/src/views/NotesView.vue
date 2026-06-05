@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import NotesTabs from '@/components/NotesTabs.vue';
-import DialogAddNote from '@/components/DialogAddNote.vue';
+import DialogNoteAdd from '@/components/DialogNoteAdd.vue';
 import axios from 'axios'
 
 // 1. On crée une variable réactive pour contrôler l'affichage du Dialog
@@ -34,8 +34,7 @@ onMounted(() => {
   <div class="header">
     <h3>📝 Mes Notes </h3>
     <Button label="Ajout note" severity="info" raised @click="showAddNoteDialog" />
-    
-    <DialogAddNote v-model:visible="isDialogVisible" :candidatures="candidaturesData" />
+    <DialogNoteAdd v-model:visible="isDialogVisible" :candidatures="candidaturesData" />
   </div>
 
   <NotesTabs />

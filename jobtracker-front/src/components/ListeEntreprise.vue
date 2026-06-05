@@ -4,7 +4,7 @@ import axios from 'axios'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
-import DialogActionCompanie from './DialogActionCompanie.vue'
+import DialogCompanieEdit from './DialogCompanieEdit.vue'
 
 const entreprises = ref([])
 const visible = ref(false)
@@ -66,7 +66,7 @@ onMounted(async () => {
             </template>
         </Column>
     </DataTable>
-<DialogActionCompanie 
+<DialogCompanieEdit 
     v-model:visible="visible" 
     :companie="selectedCompanie" 
     @save="updateEntreprise" 
