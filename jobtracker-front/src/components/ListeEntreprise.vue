@@ -37,7 +37,6 @@ const deletedCompanie = (companie) => {
     visibleDelete.value = true
 }
 
-
 onMounted(async () => {
     // On appelle la nouvelle route qui renvoie une liste propre
     const response = await axios.get('https://localhost:7265/api/Companies')
@@ -65,8 +64,8 @@ onMounted(async () => {
         </Column>
         <Column header="Actions" >
             <template #body ="slotProps">
-                <Button label="Modifier" icon="pi pi-file-edit" severity="success" text rounded @click="editDialog(slotProps.data)" />  
-                <Button label="Supprimer" icon="pi pi-times" severity="danger" text rounded @click="deletedCompanie(slotProps.data)" />
+                <Button  icon="pi pi-file-edit" severity="success" text rounded @click="editDialog(slotProps.data)" />  
+                <Button  icon="pi pi-times" severity="danger" text rounded @click="deletedCompanie(slotProps.data)" />
             </template>
         </Column>
     </DataTable>

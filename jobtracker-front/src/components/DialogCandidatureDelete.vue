@@ -5,7 +5,7 @@ import Button from 'primevue/button'
 
 const props = defineProps({
     visible: Boolean,
-    companie: Object
+    candidature: Object
 })
 
 const emit = defineEmits(['update:visible'])
@@ -15,13 +15,13 @@ const emit = defineEmits(['update:visible'])
 
 <template>
     <Dialog :visible="visible" @update:visible="val => emit('update:visible', val)" modal
-        :header="companie ? `Détails : ${companie.name}` : 'Suppression de l\'entreprise'"
+        :header="candidature ? `Détails : ${candidature.poste}` : 'Suppression de la candidature'"
         :style="{ width: '32rem' }">
 
-        <div v-if="companie">
+        <div v-if="candidature">
 
             <div class="chosen">
-                <p>Êtes-vous sûr de vouloir supprimer cette entreprise ?</p>
+                <p>Êtes-vous sûr de vouloir supprimer cette candidature ?</p>
                 <Button class="" type="submit" severity="danger" label="Supprimer" />
             </div>
         </div>

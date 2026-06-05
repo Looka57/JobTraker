@@ -4,7 +4,8 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Select from 'primevue/select' // 1. On importe le composant Select
-import DialogActionTable from './DialogActionTable.vue'
+import DialogCandidatureEdit from './DialogCandidatureEdit.vue'
+import DialogCandidatureDelete from './DialogCandidatureDelete.vue'
 
 // props
 const props = defineProps({
@@ -42,9 +43,11 @@ const updateStatus = (newValue, candidature) => {
     // axios.put(`https://localhost:7265/api/Candidatures/${candidature.id}`, { ...candidature, statusLibelle: newValue })
 }
 
+
 // STATE DIALOG
 const visible = ref(false)
 const selectedCandidature = ref(null)
+const visibleDelete = ref(false)
 
 // OPEN DIALOG
 function editDialog(candidature) {
@@ -54,6 +57,9 @@ function editDialog(candidature) {
 
 // DELETE
 function deleteCandidature(candidature) {
+    selectedCandidature.value = { ...candidature }
+    visibleDelete.value = true
+
     console.log('DELETE', candidature)
 }
 
@@ -118,7 +124,8 @@ const candidaturesFiltrees = computed(() => {
         </Column>
     </DataTable>
     
-    <DialogActionTable v-model:visible="visible" :candidature="selectedCandidature" />
+    <DialogCandidatureEdit v-model:visible="visible" :candidature="selectedCandidature" />
+    <DialogCandidatureDelete v-model:visible="visibleDelete" :candidature="selectedCandidature" />
 </template>
 
 <style scoped>
