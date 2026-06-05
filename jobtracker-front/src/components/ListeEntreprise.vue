@@ -5,10 +5,13 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import DialogCompanieEdit from './DialogCompanieEdit.vue'
+import DialogCompanieDelete from './DialogCompanieDelete.vue'
 
 const entreprises = ref([])
 const visible = ref(false)
+const visibleDelete = ref(false)
 const selectedCompanie = ref(null)
+
 
 // openDialog
 const editDialog = (companie) =>{
@@ -30,7 +33,8 @@ const updateEntreprise = (entrepriseModifiee) => {
 
 // DeletedDialog
 const deletedCompanie = (companie) => {
-     console.log('DELETE', companie)
+    selectedCompanie.value = { ...companie }
+    visibleDelete.value = true
 }
 
 
@@ -71,4 +75,11 @@ onMounted(async () => {
     :companie="selectedCompanie" 
     @save="updateEntreprise" 
 />
+
+<DialogCompanieDelete 
+    v-model:visible="visibleDelete" 
+    :companie="selectedCompanie" 
+    @delete="deletedCompanie"
+    />
+
 </template>

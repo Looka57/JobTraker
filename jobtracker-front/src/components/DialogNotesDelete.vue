@@ -12,7 +12,7 @@ const emit = defineEmits(['update:visible'])
 
 <template>
     <Dialog :visible="visible" @update:visible="val => emit('update:visible', val)" modal
-        :header="candidature ? `Détails : ${candidature.companyName}` : 'Modification de la note'"
+        :header="candidature ? `Détails : ${candidature.companyName}` : 'Suppression de la note'"
         :style="{ width: '32rem' }">
 
         <div v-if="candidature">
