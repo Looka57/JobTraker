@@ -1,104 +1,130 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import axios from 'axios'
+
+// IMPORT VUE
+import { onMounted } from 'vue'
+import { useCandidatureStore } from '@/stores/candidatureStore'
+
+// Composants PrimeVue
 import Card from 'primevue/card'
 import Button from 'primevue/button'
+
+// Composants internes
 import ListeCandidatures from '../components/ListeCandidatures.vue'
 import Statistiques from '@/components/Statistiques.vue'
 
 
-const candidatures = ref([])
-const chargement = ref(true)
-const erreur = ref(null)
+// =========================
+// STORE PINIA
+// =========================
+const store = useCandidatureStore()
 
-const chargerCandidatures = async () => {
-    try {
-        chargement.value = true
-        const response = await axios.get('https://localhost:7265/api/Candidatures')
-        candidatures.value = response.data
-    } catch (err) {
-        console.error(err)
-        erreur.value = "Impossible de joindre l'API .NET."
-    } finally {
-        chargement.value = false
-    }
-}
-// On cible "statusLibelle" qui contient le texte renvoyé par l'API .NET
-const totalRefuse = computed(() => {
-    return candidatures.value.filter(c => c.statusLibelle === 'Refusé').length
-})
-
-const totalAccepte = computed(() => {
-    return candidatures.value.filter(c => c.statusLibelle === 'Accepté').length
-})
-
-// On regroupe sous "En cours" les états intermédiaires visibles dans tes données
-const totalEnCours = computed(() => {
-    return candidatures.value.filter(c =>
-        c.statusLibelle === 'Suivi' ||
-        c.statusLibelle === 'Entretien' ||
-        c.statusLibelle === 'Envoyée'
-    ).length
-})
-
+// =========================
+// CHARGEMENT API VIA STORE
+// =========================
 onMounted(() => {
-    chargerCandidatures()
+    store.chargerCandidatures()
 })
+
 </script>
 
 <template>
+
     <div class="dashboard-container">
+
+        <!-- ================= HEADER ================= -->
         <div class="header-zone">
             <h1>📊 Mon Tableau de bord</h1>
+
             <div class="date-badge">
                 <i class="pi pi-calendar"></i>
                 <span>{{ new Date().toLocaleDateString() }}</span>
             </div>
         </div>
 
-        <div v-if="chargement" class="status-msg">⏳ Connexion à l'API .NET...</div>
-        <div v-else-if="erreur" class="status-msg text-error">❌ {{ erreur }}</div>
+        <!-- ================= ETATS API ================= -->
 
+        <!-- Chargement -->
+        <div v-if="store.chargement" class="status-msg">
+            ⏳ Connexion à l'API .NET...
+        </div>
+
+        <!-- Erreur API -->
+        <div v-else-if="store.erreur" class="status-msg text-error">
+            ❌ {{ store.erreur }}
+        </div>
+
+        <!-- ================= CONTENU ================= -->
         <div v-else>
+
+            <!-- ================= STATS ================= -->
             <div class="stats-grid">
+
                 <Card class="stat-card refuse">
-                    <template #title><span class="card-title">Refusé</span></template>
-                    <template #content><span class="card-value">{{ totalRefuse }}</span></template>
+                    <template #title>
+                        <span class="card-title">Refusé</span>
+                    </template>
+                    <template #content>
+                        <span class="card-value">{{ store.totalRefuse }}</span>
+                    </template>
                 </Card>
+
                 <Card class="stat-card accepte">
-                    <template #title><span class="card-title">Accepté</span></template>
-                    <template #content><span class="card-value">{{ totalAccepte }}</span></template>
+                    <template #title>
+                        <span class="card-title">Accepté</span>
+                    </template>
+                    <template #content>
+                        <span class="card-value">{{ store.totalAccepte }}</span>
+                    </template>
                 </Card>
+
                 <Card class="stat-card encours">
-                    <template #title><span class="card-title">En cours</span></template>
-                    <template #content><span class="card-value">{{ totalEnCours }}</span></template>
+                    <template #title>
+                        <span class="card-title">En cours</span>
+                    </template>
+                    <template #content>
+                        <span class="card-value">{{ store.totalEnCours }}</span>
+                    </template>
                 </Card>
+
             </div>
 
-            <!-- LEs 5 dernières candidatures -->
+            <!-- ================= LISTE ================= -->
             <Card class="table-card">
                 <template #title>
-                    <div class="table-header ">
+                    <div class="table-header">
                         <h3>📋 Les 5 dernières candidatures</h3>
+
                         <router-link to="/FormAjtCandidature">
                             <Button label="Ajout candidature" severity="secondary" raised />
                         </router-link>
                     </div>
                 </template>
+
                 <template #content>
-                    <ListeCandidatures :donnees="candidatures" :limite="5" />
+                    <ListeCandidatures
+                        :donnees="store.candidatures"
+                        :limite="5"
+                    />
                 </template>
             </Card>
+
+            <!-- ================= STATS COMPONENT ================= -->
             <Card class="table-card-stats">
                 <template #content>
                     <Statistiques />
                 </template>
             </Card>
+
         </div>
     </div>
+
 </template>
 
+
+
 <style scoped>
+
+/* ===== HEADER ===== */
 .header-zone {
     display: flex;
     justify-content: space-between;
@@ -112,6 +138,7 @@ onMounted(() => {
     margin: 0;
 }
 
+/* ===== DATE BADGE ===== */
 .date-badge {
     display: flex;
     align-items: center;
@@ -124,6 +151,7 @@ onMounted(() => {
     font-size: 0.9rem;
 }
 
+/* ===== GRID STATS ===== */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -131,6 +159,7 @@ onMounted(() => {
     margin-bottom: 2rem;
 }
 
+/* ===== CARDS STATS ===== */
 .stat-card {
     text-align: center;
     border: 1px solid #e2e8f0;
@@ -147,6 +176,7 @@ onMounted(() => {
     font-weight: 700;
 }
 
+/* ===== REFUSÉ ===== */
 .refuse {
     background-color: #fef2f2;
     border-color: #fee2e2;
@@ -157,6 +187,7 @@ onMounted(() => {
     color: #dc2626;
 }
 
+/* ===== ACCEPTÉ ===== */
 .accepte {
     background-color: #f0fdf4;
     border-color: #dcfce7;
@@ -167,6 +198,7 @@ onMounted(() => {
     color: #16a34a;
 }
 
+/* ===== EN COURS ===== */
 .encours {
     background-color: #fffbeb;
     border-color: #fef3c7;
@@ -177,6 +209,7 @@ onMounted(() => {
     color: #d97706;
 }
 
+/* ===== TABLE ===== */
 .table-card {
     border: 1px solid #e2e8f0;
 }
@@ -191,6 +224,7 @@ onMounted(() => {
     padding-bottom: 20px;
 }
 
+/* ===== STATUS MESSAGES ===== */
 .status-msg {
     padding: 1rem;
     border-radius: 6px;
@@ -198,12 +232,15 @@ onMounted(() => {
     border: 1px solid #e2e8f0;
 }
 
+/* ===== STATS SECTION ===== */
 .table-card-stats {
     margin-top: 2rem;
 }
 
+/* (pas utilisé actuellement) */
 .btn-candidature {
     margin-top: 1rem;
     text-align: center;
 }
+
 </style>

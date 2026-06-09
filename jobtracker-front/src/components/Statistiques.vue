@@ -36,7 +36,6 @@ const tauxReponses = computed(() => {
     if (total === 0) return 0
 
     const reponses = candidatures.value.filter(c => {
-        // Optionnel : remplace statutLibelle par la vraie clé si elle est différente (ex: c.status)
         const statut = c.statusLibelle ? c.statusLibelle.toLowerCase().trim() : ''
         return statut === 'accepté' || statut === 'refusé' || statut === 'entretien'
     })
@@ -50,18 +49,13 @@ const candidatureMois = computed (() => {
     const currentYear = now.getFullYear()
 
     return candidatures.value.filter(c => {
-        const dateCandidature = new Date(c.dateCandidature) // Assure-toi que c.dateCandidature est bien la clé de ta date
+        const dateCandidature = new Date(c.dateCandidature) 
         return dateCandidature.getMonth() === currentMonth && dateCandidature.getFullYear() === currentYear
     }).length
 }
 
 )
 
-// const props = defineProps ({
-//     totalCandidatures: Number,
-//     tauxReponses: Number,
-//     candidaturesMois: Number
-// })
 
 onMounted(() => {
     chargerCandidatures()
