@@ -1,17 +1,18 @@
 <script setup>
-
+// =========================
 // IMPORT VUE
 import { onMounted } from 'vue'
 import { useCandidatureStore } from '@/stores/candidatureStore'
 
+// =========================
 // Composants PrimeVue
 import Card from 'primevue/card'
 import Button from 'primevue/button'
 
+// =========================
 // Composants internes
 import ListeCandidatures from '../components/ListeCandidatures.vue'
 import Statistiques from '@/components/Statistiques.vue'
-
 
 // =========================
 // STORE PINIA
@@ -24,17 +25,13 @@ const store = useCandidatureStore()
 onMounted(() => {
     store.chargerCandidatures()
 })
-
 </script>
 
 <template>
-
     <div class="dashboard-container">
-
         <!-- ================= HEADER ================= -->
         <div class="header-zone">
             <h1>📊 Mon Tableau de bord</h1>
-
             <div class="date-badge">
                 <i class="pi pi-calendar"></i>
                 <span>{{ new Date().toLocaleDateString() }}</span>
@@ -42,7 +39,6 @@ onMounted(() => {
         </div>
 
         <!-- ================= ETATS API ================= -->
-
         <!-- Chargement -->
         <div v-if="store.chargement" class="status-msg">
             ⏳ Connexion à l'API .NET...
@@ -53,12 +49,9 @@ onMounted(() => {
             ❌ {{ store.erreur }}
         </div>
 
-        <!-- ================= CONTENU ================= -->
         <div v-else>
-
             <!-- ================= STATS ================= -->
             <div class="stats-grid">
-
                 <Card class="stat-card refuse">
                     <template #title>
                         <span class="card-title">Refusé</span>
@@ -117,14 +110,10 @@ onMounted(() => {
 
         </div>
     </div>
-
 </template>
-
-
 
 <style scoped>
 
-/* ===== HEADER ===== */
 .header-zone {
     display: flex;
     justify-content: space-between;
