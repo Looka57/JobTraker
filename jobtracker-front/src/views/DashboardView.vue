@@ -23,10 +23,23 @@ const chargerCandidatures = async () => {
         chargement.value = false
     }
 }
+// On cible "statusLibelle" qui contient le texte renvoyé par l'API .NET
+const totalRefuse = computed(() => {
+    return candidatures.value.filter(c => c.statusLibelle === 'Refusé').length
+})
 
-const totalRefuse = computed(() => candidatures.value.filter(c => c.statut === 'Refusé').length)
-const totalAccepte = computed(() => candidatures.value.filter(c => c.statut === 'Accepté').length)
-const totalEnCours = computed(() => candidatures.value.filter(c => c.statut === 'En cours').length)
+const totalAccepte = computed(() => {
+    return candidatures.value.filter(c => c.statusLibelle === 'Accepté').length
+})
+
+// On regroupe sous "En cours" les états intermédiaires visibles dans tes données
+const totalEnCours = computed(() => {
+    return candidatures.value.filter(c =>
+        c.statusLibelle === 'Suivi' ||
+        c.statusLibelle === 'Entretien' ||
+        c.statusLibelle === 'Envoyée'
+    ).length
+})
 
 onMounted(() => {
     chargerCandidatures()

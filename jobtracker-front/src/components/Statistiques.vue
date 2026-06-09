@@ -1,26 +1,92 @@
 <script setup>
 
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
 import Button from 'primevue/button';
+
+
+const candidatures = ref([])
+const chargement = ref(true)
+const erreur = ref(null)
+
+
+const chargerCandidatures = async () => {
+    try {
+        chargement.value = true
+        const response = await axios.get('https://localhost:7265/api/Candidatures')
+        candidatures.value = response.data
+        
+        // 🔍 ICI : Ouvre la console de ton navigateur (F12) pour regarder la structure !
+        if (response.data && response.data.length > 0) {
+            console.log("Structure d'une candidature :", response.data[0])
+        }
+    } catch (err) {
+        console.error(err)
+        erreur.value = "Impossible de joindre l'API .NET."
+    } finally {
+        chargement.value = false
+    }
+}
+
+// Ensemble des cards statistiques afficher sur le dashboard
+const totalEnvoyees = computed(() => candidatures.value.length)
+
+const tauxReponses = computed(() => {
+    const total = candidatures.value.length
+    if (total === 0) return 0
+
+    const reponses = candidatures.value.filter(c => {
+        // Optionnel : remplace statutLibelle par la vraie clé si elle est différente (ex: c.status)
+        const statut = c.statusLibelle ? c.statusLibelle.toLowerCase().trim() : ''
+        return statut === 'accepté' || statut === 'refusé' || statut === 'entretien'
+    })
+
+    return Math.round((reponses.length / total) * 100)
+})
+
+const candidatureMois = computed (() => {
+    const now = new Date()
+    const currentMonth = now.getMonth()
+    const currentYear = now.getFullYear()
+
+    return candidatures.value.filter(c => {
+        const dateCandidature = new Date(c.dateCandidature) // Assure-toi que c.dateCandidature est bien la clé de ta date
+        return dateCandidature.getMonth() === currentMonth && dateCandidature.getFullYear() === currentYear
+    }).length
+}
+
+)
+
+// const props = defineProps ({
+//     totalCandidatures: Number,
+//     tauxReponses: Number,
+//     candidaturesMois: Number
+// })
+
+onMounted(() => {
+    chargerCandidatures()
+})
 
 </script>
 
 
 <template>
     <h2>📊 Statistiques</h2>
+    <!-- TODO: Ajouter l'ancre pour faire atterir le bon graphique selon le bouton cliqué-->
 
     <div class="cardsStats">
         <div class="cardStat">
-            <h3>Nombre total de candidatures envoyées</h3>
-            <p>42</p>
+            <h3>Total de candidatures envoyées</h3>
+            <p>{{totalEnvoyees}}</p>
             <router-link to="/candidatures">
                 <Button label="En savoir plus" severity="info" variant="text" raised />
-                <!-- TODO: Ajouter l'ancre pour faire atterir le bon graphique selon le bouton cliqué-->
             </router-link>
         </div>
 
         <div class="cardStat">
             <h3>Taux de réponses</h3>
-            <p>15</p>
+            <!-- <small> Envoyées, Refusées et Entretiens</small> -->
+            <p>{{ tauxReponses }} % </p>
             <router-link to="/candidatures">
                 <Button label="En savoir plus" severity="info" variant="text" raised />
             </router-link>
@@ -28,7 +94,7 @@ import Button from 'primevue/button';
 
         <div class="cardStat">
             <h3>Candidatures du mois</h3>
-            <p>20</p>
+            <p>{{candidatureMois}}</p>
             <router-link to="/candidatures">
                 <Button label="En savoir plus" severity="info" variant="text" raised />
             </router-link>

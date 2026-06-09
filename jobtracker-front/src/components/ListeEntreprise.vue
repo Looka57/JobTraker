@@ -13,6 +13,7 @@ const visibleDelete = ref(false)
 const selectedCompanie = ref(null)
 
 
+
 // openDialog
 const editDialog = (companie) =>{
     selectedCompanie.value = {...companie}
