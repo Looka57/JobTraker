@@ -1,4 +1,4 @@
-# 💼 JobTraker
+# 💼 JobTraker (en cours)
 
 Une application Full Stack permettant de centraliser et suivre l'ensemble de ses recherches d'emploi.
 
