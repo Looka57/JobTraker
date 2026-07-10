@@ -1,4 +1,12 @@
-# 💼 JobTraker (en cours)
+# 💼 JobTraker
+
+---
+
+## 🚧 État du projet
+
+🟢 En développement actif
+
+---
 
 Une application Full Stack permettant de centraliser et suivre l'ensemble de ses recherches d'emploi.
 
@@ -96,8 +104,4 @@ SQL Server
 - Docker
 - Git
 
----
 
-## 🚧 État du projet
-
-🟢 En développement actif
